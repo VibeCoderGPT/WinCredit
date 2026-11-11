@@ -1,0 +1,19 @@
+{
+  "name": "wincredit",
+  "productName": "WinCredit",
+  "version": "0.1.0",
+  "description": "Encrypted credit-card vault with one-click payment filling for Windows. Your cards stay yours.",
+  "main": "main.js",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "start": "electron .",
+    "test": "node tests/crypto.test.js && node tests/cards.test.js && node tests/renderer.test.js"
+  },
+  "devDependencies": {
+    "@electron/asar": "^4.3.1",
+    "electron": "45.2.3",
+    "jsdom": "^31.0.0",
+    "resedit": "^3.1.0"
+  }
+}

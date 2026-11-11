@@ -1,0 +1,39 @@
+# Dépendances
+node_modules/
+
+# Caches & outils
+.npm-cache/
+.electron-cache/
+.build/
+
+# Sorties packagées & profils
+dist/
+.dev-profile*/
+
+# Secrets / données locales — NE JAMAIS committer
+*.wcv
+vault.wcv
+settings.json
+
+# Journal de bord & artefacts de debug
+*.log
+crash-log.txt
+conv-*.jsonl
+user-screenshot.png
+shot-*.png
+.ps-bridge-report.txt
+smoke.txt
+smoke2.txt
+.acl-recovery/
+
+# Divers
+Thumbs.db
+.DS_Store
+
+# Projets/outils voisins présents dans ce workspace mais hors WinCredit
+dsh-github-plugin/
+.slots.json
+np_root.exe
+zz1/
+scripts/dump_*.py
+scripts/smoke_asar.js

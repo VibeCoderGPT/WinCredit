@@ -1,0 +1,831 @@
+<!doctype html>
+<html lang="en" data-theme="a">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WinCredit — Visual directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ SHARED STRUCTURE (page chrome is neutral) ============ */
+* { margin:0; padding:0; box-sizing:border-box; }
+:root{
+  --font-ui:'Inter',system-ui,'Segoe UI',sans-serif;
+  --font-display:'Fraunces',Georgia,serif;
+  --bg:#0A0F1D; --bg-deep:#070B15;
+  --winbg:#0D1424;
+  --surface:#121B31; --surface2:#0E1628;
+  --border:rgba(148,163,184,.15);
+  --text:#E9EFFA; --dim:#9AA9C4; --faint:#7686A3;
+  --primary:#EBA64A; --primary-ink:#221505;
+  --accent:#8B5CF6; --good:#4ADE80; --danger:#F87171; --info:#60A5FA;
+  --radius:16px;
+  --stage-glow1:rgba(235,166,74,.16); --stage-glow2:rgba(139,92,246,.10);
+  --grad-card:linear-gradient(135deg,#1C2A52 0%,#101A36 55%,#241A0B 130%);
+}
+[data-theme="b"]{
+  --font-ui:'Inter',system-ui; --font-display:'Space Grotesk',system-ui;
+  --bg:#090C11; --bg-deep:#06080C;
+  --winbg:rgba(13,17,24,.82);
+  --surface:rgba(255,255,255,.055); --surface2:rgba(255,255,255,.03);
+  --border:rgba(255,255,255,.10);
+  --text:#EDF3FB; --dim:#9FB3CC; --faint:#7C90AC;
+  --primary:#85B9FF; --primary-ink:#04121F;
+  --accent:#5EE0C8; --good:#4ADE80; --danger:#F87171; --info:#85B9FF;
+  --radius:18px;
+  --stage-glow1:rgba(133,185,255,.15); --stage-glow2:rgba(94,224,200,.08);
+  --grad-card:linear-gradient(135deg,#17253B 0%,#0E1622 60%,#0C1F24 130%);
+}
+[data-theme="c"]{
+  --font-ui:'Inter',system-ui; --font-display:'Sora',system-ui;
+  --bg:#08060E; --bg-deep:#050309;
+  --winbg:#0E0A18;
+  --surface:#150F26; --surface2:#110B1E;
+  --border:rgba(167,139,250,.22);
+  --text:#F0ECFA; --dim:#A99CC9; --faint:#83779F;
+  --primary:#A78BFA; --primary-ink:#120A26;
+  --accent:#F472B6; --good:#4ADE80; --danger:#F87171; --info:#A78BFA;
+  --radius:12px;
+  --stage-glow1:rgba(167,139,250,.18); --stage-glow2:rgba(244,114,182,.09);
+  --grad-card:linear-gradient(135deg,#241A45 0%,#150F2B 60%,#2A1030 130%);
+}
+html,body{height:100%;}
+body{
+  font-family:var(--font-ui);
+  background:
+    radial-gradient(900px 520px at 18% -10%, var(--stage-glow1), transparent 60%),
+    radial-gradient(900px 560px at 85% 110%, var(--stage-glow2), transparent 60%),
+    var(--bg);
+  color:var(--text);
+  min-height:100%;
+  -webkit-font-smoothing:antialiased;
+}
+.page{max-width:1060px;margin:0 auto;padding:34px 28px 64px;}
+
+/* header */
+.page-head{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:26px;}
+.brand{display:flex;align-items:center;gap:14px;}
+.mark{
+  width:44px;height:44px;border-radius:12px;display:grid;place-items:center;
+  font-family:var(--font-display);font-weight:600;font-size:22px;color:var(--primary-ink);
+  background:linear-gradient(135deg,var(--primary),color-mix(in srgb,var(--primary) 55%,#fff));
+  box-shadow:0 6px 24px color-mix(in srgb,var(--primary) 30%,transparent);
+}
+.brand h1{font-family:var(--font-display);font-weight:600;font-size:21px;letter-spacing:.01em;}
+.brand p{color:var(--dim);font-size:12.5px;margin-top:2px;}
+.themes{display:flex;gap:8px;flex-wrap:wrap;}
+.chip{
+  font:600 13px/1 var(--font-ui);color:var(--dim);cursor:pointer;
+  padding:10px 16px;border-radius:999px;border:1px solid var(--border);
+  background:var(--surface);transition:all .2s ease;
+}
+.chip:hover{color:var(--text);border-color:color-mix(in srgb,var(--primary) 45%,var(--border));transform:translateY(-1px);}
+.chip[aria-pressed="true"]{color:var(--primary-ink);background:var(--primary);border-color:var(--primary);box-shadow:0 4px 18px color-mix(in srgb,var(--primary) 35%,transparent);}
+
+/* stage + demo tabs */
+.stage{position:relative;}
+.demo-tabs{display:flex;gap:8px;margin-bottom:12px;}
+.demo-tab{
+  font:600 12px/1 var(--font-ui);letter-spacing:.02em;cursor:pointer;
+  padding:9px 14px;border-radius:9px;border:1px solid var(--border);
+  background:rgba(255,255,255,.03);color:var(--dim);transition:all .18s ease;
+}
+.demo-tab:hover{color:var(--text);}
+.demo-tab.active{color:var(--text);background:var(--surface);border-color:color-mix(in srgb,var(--primary) 50%,var(--border));}
+
+/* window */
+.window{
+  border-radius:var(--radius);overflow:hidden;
+  background:var(--winbg);border:1px solid var(--border);
+  box-shadow:0 30px 90px rgba(0,0,0,.55), 0 2px 10px rgba(0,0,0,.4);
+  height:640px;display:flex;flex-direction:column;
+  backdrop-filter:blur(6px);
+}
+[data-theme="b"] .window{backdrop-filter:blur(22px);}
+.titlebar{
+  height:42px;flex:0 0 42px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 6px 0 16px;border-bottom:1px solid var(--border);
+  background:color-mix(in srgb,var(--surface2) 80%,transparent);user-select:none;
+}
+.tb-left{display:flex;align-items:center;gap:9px;font-size:12.5px;font-weight:600;color:var(--dim);}
+.tb-mark{
+  width:20px;height:20px;border-radius:6px;display:grid;place-items:center;
+  font-family:var(--font-display);font-size:11.5px;font-weight:600;color:var(--primary-ink);
+  background:linear-gradient(135deg,var(--primary),color-mix(in srgb,var(--primary) 55%,#fff));
+}
+.tb-right{display:flex;align-items:center;height:100%;}
+.tb-btn{width:44px;height:100%;display:grid;place-items:center;background:none;border:none;color:var(--faint);cursor:pointer;}
+.tb-btn:hover{background:rgba(255,255,255,.06);color:var(--text);}
+.tb-btn.close:hover{background:#E81123;color:#fff;}
+.tb-btn svg{width:11px;height:11px;}
+
+/* win body + screens */
+.win-body{position:relative;flex:1;min-height:0;}
+.screen{position:absolute;inset:0;overflow-y:auto;padding:34px 40px 40px;display:none;}
+.screen.active{display:block;animation:screenIn .28s ease;}
+@keyframes screenIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:none;}}
+.screen::-webkit-scrollbar{width:10px;}
+.screen::-webkit-scrollbar-thumb{background:var(--border);border-radius:8px;border:3px solid transparent;background-clip:content-box;}
+
+/* ============ UI KIT ============ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font:600 13.5px/1 var(--font-ui);border-radius:11px;cursor:pointer;
+  padding:12px 20px;border:1px solid transparent;transition:transform .12s ease,box-shadow .2s ease,background .2s ease,opacity .2s;
+}
+.btn:active{transform:scale(.98);}
+.btn:disabled{opacity:.5;cursor:default;transform:none;}
+.btn .ic{width:16px;height:16px;}
+.btn-primary{background:linear-gradient(180deg,color-mix(in srgb,var(--primary) 92%,#fff),var(--primary));color:var(--primary-ink);box-shadow:0 6px 20px color-mix(in srgb,var(--primary) 30%,transparent);}
+.btn-primary:hover{filter:brightness(1.06);}
+.btn-ghost{background:var(--surface);color:var(--text);border-color:var(--border);}
+.btn-ghost:hover{border-color:color-mix(in srgb,var(--primary) 45%,var(--border));background:color-mix(in srgb,var(--surface) 85%,var(--primary) 6%);}
+.btn-danger{background:transparent;color:var(--danger);border-color:color-mix(in srgb,var(--danger) 35%,transparent);}
+.btn-danger:hover{background:color-mix(in srgb,var(--danger) 10%,transparent);}
+.btn-sm{padding:9px 14px;font-size:12.5px;border-radius:9px;}
+.btn-block{width:100%;}
+.ic{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex:none;}
+.field{display:flex;flex-direction:column;gap:7px;}
+.field label{font-size:12px;font-weight:600;color:var(--dim);letter-spacing:.02em;}
+.input{
+  font:500 13.5px/1.4 var(--font-ui);color:var(--text);width:100%;
+  background:var(--surface2);border:1px solid var(--border);border-radius:10px;
+  padding:12px 14px;outline:none;transition:border-color .18s,box-shadow .18s;
+}
+.input::placeholder{color:var(--faint);}
+.input:focus{border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in srgb,var(--primary) 18%,transparent);}
+.input-wrap{position:relative;}
+.input-wrap .input{padding-right:42px;}
+.eye-btn{
+  position:absolute;right:6px;top:50%;transform:translateY(-50%);
+  width:32px;height:32px;display:grid;place-items:center;background:none;border:none;
+  color:var(--faint);cursor:pointer;border-radius:8px;
+}
+.eye-btn:hover{color:var(--text);background:rgba(255,255,255,.06);}
+.eye-btn .ic{width:16px;height:16px;}
+.hint{font-size:11.5px;color:var(--faint);}
+.hint a{color:var(--info);text-decoration:none;}
+.hint a:hover{text-decoration:underline;}
+.kbd{
+  font:600 10.5px/1 var(--font-ui);color:var(--dim);
+  border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;
+  padding:3px 6px;background:var(--surface2);
+}
+a{color:var(--info);}
+
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:6px;}
+
+/* toast */
+.toast{
+  position:absolute;left:50%;bottom:26px;transform:translate(-50%,14px);
+  display:flex;align-items:center;gap:10px;
+  background:#0B0F1A;color:var(--text);border:1px solid var(--border);
+  border-radius:12px;padding:11px 16px;font:500 13px/1.4 var(--font-ui);
+  box-shadow:0 14px 40px rgba(0,0,0,.5);
+  opacity:0;pointer-events:none;transition:opacity .25s,transform .25s;z-index:50;
+  max-width:calc(100% - 80px);
+}
+.toast.show{opacity:1;transform:translate(-50%,0);}
+.toast .ic{width:16px;height:16px;color:var(--good);}
+[data-theme="b"] .toast{background:rgba(13,17,24,.95);backdrop-filter:blur(14px);}
+[data-theme="c"] .toast{background:#150F26;}
+
+/* ============ SCREEN: UNLOCK ============ */
+.unlock{display:flex;align-items:center;justify-content:center;}
+.unlock-card{width:min(400px,100%);text-align:center;display:flex;flex-direction:column;gap:8px;}
+.hero-mark{
+  width:74px;height:74px;border-radius:20px;margin:0 auto 18px;display:grid;place-items:center;
+  font-family:var(--font-display);font-weight:600;font-size:34px;color:var(--primary-ink);
+  background:linear-gradient(135deg,var(--primary),color-mix(in srgb,var(--primary) 55%,#fff));
+  box-shadow:0 12px 44px color-mix(in srgb,var(--primary) 40%,transparent), inset 0 1px 0 rgba(255,255,255,.35);
+}
+.unlock-card h2{font-family:var(--font-display);font-weight:600;font-size:26px;letter-spacing:.01em;}
+.unlock-card .sub{color:var(--dim);font-size:13.5px;margin-bottom:22px;}
+.unlock-form{display:flex;flex-direction:column;gap:14px;text-align:left;}
+.badge-row{display:flex;justify-content:center;gap:8px;margin-top:20px;flex-wrap:wrap;}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:var(--dim);
+  border:1px solid var(--border);background:var(--surface2);border-radius:999px;padding:5px 11px;
+}
+.badge .ic{width:13px;height:13px;}
+.badge.lock .ic{color:var(--good);}
+.badge.local .ic{color:var(--info);}
+.badge.crypto .ic{color:var(--primary);}
+
+/* ============ SCREEN: VAULT ============ */
+.vault-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:24px;}
+.vault-title h2{font-family:var(--font-display);font-weight:600;font-size:24px;}
+.vault-title p{color:var(--dim);font-size:12.5px;margin-top:3px;}
+.search{position:relative;width:250px;}
+.search .input{padding-left:38px;}
+.search .ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--faint);pointer-events:none;}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;padding-bottom:8px;}
+.cardtile{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:14px 14px 12px;cursor:pointer;display:flex;flex-direction:column;gap:12px;
+  transition:transform .16s ease,border-color .2s,box-shadow .25s;
+}
+.cardtile:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--primary) 45%,var(--border));box-shadow:0 14px 34px rgba(0,0,0,.35);}
+.cardtile:active{transform:scale(.99);}
+.tile-name{display:flex;align-items:center;justify-content:space-between;}
+.tile-name b{font-size:13.5px;font-weight:600;}
+.tile-menu{width:28px;height:28px;display:grid;place-items:center;background:none;border:none;border-radius:7px;color:var(--faint);cursor:pointer;}
+.tile-menu:hover{background:rgba(255,255,255,.07);color:var(--text);}
+.tile-menu .ic{width:15px;height:15px;}
+.tile-actions{display:flex;gap:8px;}
+.tile-actions .btn{flex:1;}
+
+/* credit card visual */
+.ccard{
+  position:relative;border-radius:14px;aspect-ratio:1.586;padding:16px;overflow:hidden;
+  background:var(--g,var(--grad-card));color:#fff;
+  box-shadow:0 10px 28px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.09);
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.ccard::after{
+  content:"";position:absolute;inset:0;
+  background:radial-gradient(220px 130px at 85% -10%,rgba(255,255,255,.14),transparent 60%);
+  pointer-events:none;
+}
+.ccard .top{display:flex;justify-content:space-between;align-items:flex-start;position:relative;z-index:1;}
+.ccard .bank{font:600 11px/1 var(--font-ui);letter-spacing:.14em;opacity:.75;text-transform:uppercase;}
+.ccard .brandtxt{font-weight:700;font-style:italic;font-size:15px;letter-spacing:.04em;}
+.ccard.visa{--g:linear-gradient(135deg,#22356B 0%,#16224A 55%,#0E1630 130%);}
+.ccard.mc{--g:linear-gradient(135deg,#2A2F3E 0%,#171B26 60%,#3A2417 130%);}
+.ccard.amex{--g:linear-gradient(135deg,#134E4A 0%,#0E3A44 60%,#0A2430 130%);}
+.ccard .num{font:500 15.5px/1 'Inter',monospace;letter-spacing:.14em;position:relative;z-index:1;font-variant-numeric:tabular-nums;}
+.ccard .foot{display:flex;justify-content:space-between;align-items:flex-end;position:relative;z-index:1;font-size:10.5px;}
+.ccard .foot .lab{opacity:.55;font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:3px;}
+.ccard .foot b{font-weight:600;font-size:12px;letter-spacing:.03em;}
+.chip{
+  width:38px;height:28px;border-radius:6px;position:relative;z-index:1;
+  background:linear-gradient(135deg,#F3D58A,#C89B4A 60%,#E8C87E);
+  box-shadow:inset 0 0 0 1px rgba(0,0,0,.25);
+}
+.chip::before{content:"";position:absolute;inset:6px 7px;border-radius:3px;border:1px solid rgba(0,0,0,.28);}
+.chip::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 46%,rgba(255,255,255,.35) 50%,transparent 54%);}
+.mc-circles{display:flex;position:relative;z-index:1;}
+.mc-circles span{width:20px;height:20px;border-radius:50%;}
+.mc-circles span:first-child{background:#EB001B;}
+.mc-circles span:last-child{background:#F79E1B;margin-left:-8px;mix-blend-mode:screen;}
+
+.empty-note{text-align:center;color:var(--faint);font-size:12.5px;padding:40px 0;display:none;}
+
+/* ============ SCREEN: PAY ============ */
+.pay-top{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.back-btn{width:34px;height:34px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--border);background:var(--surface2);color:var(--dim);cursor:pointer;transition:all .18s;}
+.back-btn:hover{color:var(--text);border-color:color-mix(in srgb,var(--primary) 40%,var(--border));}
+.back-btn .ic{width:16px;height:16px;}
+.pay-top h2{font-family:var(--font-display);font-weight:600;font-size:20px;}
+.pay-top .sub{font-size:12px;color:var(--faint);margin-top:2px;}
+.pay-layout{display:grid;grid-template-columns:minmax(300px,1.25fr) minmax(280px,1fr);gap:26px;align-items:start;}
+.pay-card .ccard{box-shadow:0 18px 44px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.09);}
+.pay-card .caption{font-size:11px;color:var(--faint);text-align:center;margin-top:12px;}
+.pay-actions{display:flex;flex-direction:column;gap:14px;}
+.pay-actions .sec-title{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);margin-bottom:2px;}
+.fieldrow{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  background:var(--surface);border:1px solid var(--border);border-radius:11px;padding:11px 10px 11px 15px;
+  transition:border-color .18s;
+}
+.fieldrow:hover{border-color:color-mix(in srgb,var(--primary) 35%,var(--border));}
+.fieldrow .fl{display:flex;flex-direction:column;gap:2px;min-width:0;}
+.fieldrow .fl .lab{font-size:10.5px;color:var(--faint);letter-spacing:.05em;text-transform:uppercase;font-weight:600;}
+.fieldrow .fl .val{font-size:13.5px;font-weight:600;letter-spacing:.05em;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.copy-chip{
+  width:30px;height:30px;display:grid;place-items:center;border-radius:8px;flex:none;
+  background:var(--surface2);border:1px solid var(--border);color:var(--dim);cursor:pointer;transition:all .15s;
+}
+.copy-chip:hover{color:var(--primary);border-color:color-mix(in srgb,var(--primary) 45%,var(--border));}
+.copy-chip .ic{width:14px;height:14px;}
+.clip-status{
+  display:flex;align-items:center;gap:10px;border:1px solid var(--border);border-radius:11px;
+  background:var(--surface2);padding:9px 14px;font-size:11.5px;color:var(--dim);
+}
+.clip-status .dot{width:7px;height:7px;border-radius:50%;background:var(--good);box-shadow:0 0 8px var(--good);flex:none;}
+.clip-status .bar{flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.08);overflow:hidden;}
+.clip-status .bar i{display:block;height:100%;width:100%;background:var(--good);border-radius:3px;transform-origin:left;transition:transform 1s linear;}
+.clip-status .time{font-weight:700;font-variant-numeric:tabular-nums;color:var(--text);flex:none;}
+.clip-status .clear{background:none;border:none;color:var(--faint);font-size:11px;cursor:pointer;text-decoration:underline;flex:none;}
+.clip-status .clear:hover{color:var(--text);}
+.note{
+  font-size:11.5px;color:var(--faint);line-height:1.55;
+  border:1px dashed var(--border);border-radius:11px;padding:11px 14px;
+}
+.note b{color:var(--dim);font-weight:600;}
+
+/* ============ SCREEN: ADD CARD ============ */
+.add-wrap{max-width:560px;margin:0 auto;}
+.add-wrap h2{font-family:var(--font-display);font-weight:600;font-size:22px;margin-bottom:4px;}
+.add-wrap .sub{color:var(--dim);font-size:13px;margin-bottom:22px;}
+.add-form{display:flex;flex-direction:column;gap:16px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.brand-detect{
+  display:inline-flex;align-items:center;gap:7px;height:26px;font-size:11px;font-weight:700;
+  padding:0 10px;border-radius:999px;border:1px solid var(--border);color:var(--dim);background:var(--surface2);
+}
+.brand-detect.visa{color:#8FB4FF;border-color:rgba(96,165,250,.4);}
+.brand-detect.mc{color:#FFB08A;border-color:rgba(251,146,60,.4);}
+.brand-detect.amex{color:#7FE0D3;border-color:rgba(45,212,191,.4);}
+.add-form .foot{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:6px;flex-wrap:wrap;}
+.add-form .foot .btns{display:flex;gap:10px;}
+.check{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--dim);cursor:pointer;user-select:none;}
+.check input{width:16px;height:16px;accent-color:var(--primary);cursor:pointer;}
+.secure-note{display:flex;align-items:center;gap:8px;font-size:11.5px;color:var(--faint);margin-top:2px;}
+.secure-note .ic{width:14px;height:14px;color:var(--good);}
+
+/* stage note */
+.stage-note{margin-top:20px;text-align:center;font-size:12.5px;color:var(--dim);line-height:1.6;}
+.stage-note b{color:var(--text);font-weight:600;}
+
+/* mobile */
+@media (max-width:820px){
+  .page{padding:22px 14px 48px;}
+  .window{height:auto;min-height:600px;}
+  .screen{padding:24px 18px 30px;}
+  .pay-layout{grid-template-columns:1fr;gap:20px;}
+  .grid2{grid-template-columns:1fr;}
+  .search{width:100%;}
+  .demo-tabs{overflow-x:auto;}
+  .demo-tab{white-space:nowrap;}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;}
+}
+</style>
+</head>
+<body>
+
+<!-- SVG icon library -->
+<svg style="display:none" aria-hidden="true">
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2.5"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><circle cx="12" cy="15.5" r="1.4" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="i-eye-off" viewBox="0 0 24 24"><path d="M4 4l16 16M10.6 6.2A10.7 10.7 0 0 1 12 6c6 0 9.5 6 9.5 6a17.6 17.6 0 0 1-3 3.6M6.6 7.2A16.6 16.6 0 0 0 2.5 12S6 18 12 18a10 10 0 0 0 3.4-.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.8-3.8"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2.5"/><path d="M5 15H4.5A2.5 2.5 0 0 1 2 12.5v-8A2.5 2.5 0 0 1 4.5 2h8A2.5 2.5 0 0 1 15 4.5V5"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="m4.5 12.5 5 5 10-11"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><path d="M13 2 4.5 13.5H11L10 22l8.5-11.5H12L13 2Z"/></symbol>
+  <symbol id="i-chev-left" viewBox="0 0 24 24"><path d="m14.5 5-7 7 7 7"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.5 20 6v6c0 5-3.4 8.4-8 9.5C7.4 20.4 4 17 4 12V6l8-3.5Z"/><path d="m8.8 12 2.2 2.2 4.2-4.4"/></symbol>
+  <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4.5"/><path d="m11.5 11.5 8-8M17 6l2.5 2.5M14 9l2 2"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.6" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-min" viewBox="0 0 24 24"><path d="M5 12h14"/></symbol>
+  <symbol id="i-max" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+  <symbol id="i-card" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="2.5"/><path d="M2.5 9.5h19M6 15h4"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="m4 11 8-7 8 7"/><path d="M6 10v9.5h12V10"/></symbol>
+</svg>
+
+<div class="page">
+  <header class="page-head">
+    <div class="brand">
+      <div class="mark">W</div>
+      <div>
+        <h1>WinCredit</h1>
+        <p>Visual directions — pick the theme you like best, everything works in this mockup</p>
+      </div>
+    </div>
+    <div class="themes" role="radiogroup" aria-label="Visual direction">
+      <button class="chip" data-theme-pick="a" aria-pressed="true">A · Midnight Gold</button>
+      <button class="chip" data-theme-pick="b" aria-pressed="false">B · Graphite Ice</button>
+      <button class="chip" data-theme-pick="c" aria-pressed="false">C · Obsidian Violet</button>
+    </div>
+  </header>
+
+  <div class="stage">
+    <div class="demo-tabs" role="tablist" aria-label="Screens">
+      <button class="demo-tab active" data-go="unlock">🔓 Unlock</button>
+      <button class="demo-tab" data-go="vault">Vault</button>
+      <button class="demo-tab" data-go="pay">Pay a game</button>
+      <button class="demo-tab" data-go="add">Add card</button>
+    </div>
+
+    <div class="window">
+      <div class="titlebar">
+        <div class="tb-left"><span class="tb-mark">W</span> WinCredit</div>
+        <div class="tb-right">
+          <button class="tb-btn" aria-label="Minimize"><svg><use href="#i-min"/></svg></button>
+          <button class="tb-btn" aria-label="Maximize"><svg><use href="#i-max"/></svg></button>
+          <button class="tb-btn close" aria-label="Close"><svg><use href="#i-close"/></svg></button>
+        </div>
+      </div>
+
+      <div class="win-body">
+
+        <!-- ============ UNLOCK ============ -->
+        <section class="screen active" data-screen="unlock">
+          <div class="unlock">
+            <div class="unlock-card">
+              <div class="hero-mark">W</div>
+              <h2>WinCredit</h2>
+              <p class="sub">Your cards, encrypted. Only you hold the key.</p>
+              <form class="unlock-form" id="unlock-form">
+                <div class="field">
+                  <label for="pwd">Master password</label>
+                  <div class="input-wrap">
+                    <input class="input" type="password" id="pwd" placeholder="Enter your master password" autocomplete="off">
+                    <button type="button" class="eye-btn" id="pwd-eye" aria-label="Show password"><svg class="ic"><use href="#i-eye"/></svg></button>
+                  </div>
+                </div>
+                <button class="btn btn-primary btn-block" type="submit" style="margin-top:4px;">
+                  <svg class="ic"><use href="#i-lock"/></svg> Unlock vault
+                </button>
+              </form>
+              <div class="badge-row">
+                <span class="badge crypto"><svg class="ic"><use href="#i-key"/></svg> AES-256-GCM</span>
+                <span class="badge local"><svg class="ic"><use href="#i-shield"/></svg> Stored locally only</span>
+                <span class="badge lock"><svg class="ic"><use href="#i-lock"/></svg> Locked at all times</span>
+              </div>
+              <p class="hint" style="margin-top:16px;">Forgot your password? The vault can't be recovered without it — that's the point.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ VAULT ============ -->
+        <section class="screen" data-screen="vault">
+          <div class="vault-head">
+            <div class="vault-title">
+              <h2>Your cards</h2>
+              <p>Click a card to fill a payment · <span class="kbd">Ctrl</span>+<span class="kbd">Alt</span>+<span class="kbd">C</span> opens WinCredit anywhere</p>
+            </div>
+            <div class="search">
+              <svg class="ic"><use href="#i-search"/></svg>
+              <input class="input" id="search" type="text" placeholder="Search cards…" aria-label="Search cards">
+            </div>
+            <button class="btn btn-primary btn-sm" data-go="add"><svg class="ic"><use href="#i-plus"/></svg> Add card</button>
+          </div>
+          <div class="cards-grid" id="cards-grid">
+
+            <div class="cardtile" data-nick="Battle.net" data-brand="visa" data-num4="4242" data-holder="MICHAEL TREMBLAY" data-exp="09/28" data-search="battle net visa 4242">
+              <div class="tile-name"><b>Battle.net</b><button class="tile-menu" aria-label="Card options"><svg class="ic"><use href="#i-dots"/></svg></button></div>
+              <div class="ccard visa">
+                <div class="top"><span class="bank">WinCredit</span><span class="brandtxt">VISA</span></div>
+                <div class="num">••••&nbsp;••••&nbsp;••••&nbsp;4242</div>
+                <div class="foot">
+                  <div><div class="lab">Holder</div><b>MICHAEL TREMBLAY</b></div>
+                  <div class="chip"></div>
+                  <div><div class="lab">Expiry</div><b>09/28</b></div>
+                </div>
+              </div>
+              <div class="tile-actions">
+                <button class="btn btn-ghost btn-sm copy-act" data-label="Card number"><svg class="ic"><use href="#i-copy"/></svg> Copy</button>
+                <button class="btn btn-ghost btn-sm fill-act"><svg class="ic"><use href="#i-zap"/></svg> Fill</button>
+              </div>
+            </div>
+
+            <div class="cardtile" data-nick="League of Legends" data-brand="mc" data-num4="5432" data-holder="MICHAEL TREMBLAY" data-exp="11/27" data-search="league of legends mastercard 5432">
+              <div class="tile-name"><b>League of Legends</b><button class="tile-menu" aria-label="Card options"><svg class="ic"><use href="#i-dots"/></svg></button></div>
+              <div class="ccard mc">
+                <div class="top"><span class="bank">WinCredit</span><span class="mc-circles"><span></span><span></span></span></div>
+                <div class="num">••••&nbsp;••••&nbsp;••••&nbsp;5432</div>
+                <div class="foot">
+                  <div><div class="lab">Holder</div><b>MICHAEL TREMBLAY</b></div>
+                  <div class="chip"></div>
+                  <div><div class="lab">Expiry</div><b>11/27</b></div>
+                </div>
+              </div>
+              <div class="tile-actions">
+                <button class="btn btn-ghost btn-sm copy-act" data-label="Card number"><svg class="ic"><use href="#i-copy"/></svg> Copy</button>
+                <button class="btn btn-ghost btn-sm fill-act"><svg class="ic"><use href="#i-zap"/></svg> Fill</button>
+              </div>
+            </div>
+
+            <div class="cardtile" data-nick="Steam" data-brand="amex" data-num4="1008" data-holder="MICHAEL TREMBLAY" data-exp="03/29" data-search="steam amex 1008">
+              <div class="tile-name"><b>Steam</b><button class="tile-menu" aria-label="Card options"><svg class="ic"><use href="#i-dots"/></svg></button></div>
+              <div class="ccard amex">
+                <div class="top"><span class="bank">WinCredit</span><span class="brandtxt">AMEX</span></div>
+                <div class="num">••••&nbsp;••••••&nbsp;•1008</div>
+                <div class="foot">
+                  <div><div class="lab">Holder</div><b>MICHAEL TREMBLAY</b></div>
+                  <div class="chip"></div>
+                  <div><div class="lab">Expiry</div><b>03/29</b></div>
+                </div>
+              </div>
+              <div class="tile-actions">
+                <button class="btn btn-ghost btn-sm copy-act" data-label="Card number"><svg class="ic"><use href="#i-copy"/></svg> Copy</button>
+                <button class="btn btn-ghost btn-sm fill-act"><svg class="ic"><use href="#i-zap"/></svg> Fill</button>
+              </div>
+            </div>
+
+          </div>
+          <p class="empty-note" id="empty-note">No card matches “<span></span>”.</p>
+        </section>
+
+        <!-- ============ PAY ============ -->
+        <section class="screen" data-screen="pay">
+          <div class="pay-top">
+            <button class="back-btn" data-go="vault" aria-label="Back to vault"><svg class="ic"><use href="#i-chev-left"/></svg></button>
+            <div>
+              <h2 id="pay-title">Battle.net</h2>
+              <p class="sub">Payment filling · choose how you want to fill</p>
+            </div>
+          </div>
+          <div class="pay-layout">
+            <div class="pay-card">
+              <div class="ccard visa" id="pay-ccard">
+                <div class="top"><span class="bank">WinCredit</span><span class="brandtxt" id="pay-brand">VISA</span></div>
+                <div class="num" id="pay-num">••••&nbsp;••••&nbsp;••••&nbsp;4242</div>
+                <div class="foot">
+                  <div><div class="lab">Holder</div><b id="pay-holder">MICHAEL TREMBLAY</b></div>
+                  <div class="chip"></div>
+                  <div><div class="lab">Expiry</div><b id="pay-exp">09/28</b></div>
+                </div>
+              </div>
+              <p class="caption">Nothing is ever shown in full. Numbers are revealed field by field, only when you copy.</p>
+            </div>
+            <div class="pay-actions">
+              <div>
+                <div class="sec-title">Card fields</div>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                  <div class="fieldrow"><div class="fl"><span class="lab">Card number</span><span class="val">•••• 4242</span></div><button class="copy-chip copy-act" data-label="Card number" aria-label="Copy card number"><svg class="ic"><use href="#i-copy"/></svg></button></div>
+                  <div class="fieldrow"><div class="fl"><span class="lab">Expiry</span><span class="val">09/28</span></div><button class="copy-chip copy-act" data-label="Expiry date" aria-label="Copy expiry"><svg class="ic"><use href="#i-copy"/></svg></button></div>
+                  <div class="fieldrow"><div class="fl"><span class="lab">Security code (CVV)</span><span class="val">•••</span></div><button class="copy-chip copy-act" data-label="CVV" aria-label="Copy CVV"><svg class="ic"><use href="#i-copy"/></svg></button></div>
+                  <div class="fieldrow"><div class="fl"><span class="lab">Name on card</span><span class="val">MICHAEL TREMBLAY</span></div><button class="copy-chip copy-act" data-label="Cardholder name" aria-label="Copy name"><svg class="ic"><use href="#i-copy"/></svg></button></div>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-block copy-act" data-label="Card number"><svg class="ic"><use href="#i-copy"/></svg> Copy card number</button>
+              <button class="btn btn-ghost btn-block" id="autofill-btn"><svg class="ic"><use href="#i-zap"/></svg> Auto-paste into Battle.net</button>
+              <div class="clip-status" id="clip-status">
+                <span class="dot"></span>
+                <span id="clip-label">Clipboard empty</span>
+                <span class="bar" style="flex:1;"><i id="clip-bar" style="transform:scaleX(0);"></i></span>
+                <span class="time" id="clip-time">0:00</span>
+                <button class="clear" id="clip-clear" hidden>Clear now</button>
+              </div>
+              <p class="note"><b>Auto-paste</b> switches back to the app you were using and pastes for you. In fullscreen games it can be blocked — then just use <b>Copy</b> and press <b>Ctrl+V</b>. The clipboard wipes itself after 45 seconds either way.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ ADD CARD ============ -->
+        <section class="screen" data-screen="add">
+          <div class="add-wrap">
+            <h2>Add a card</h2>
+            <p class="sub">Stored encrypted under your master password. Not even we can read it.</p>
+            <form class="add-form" id="add-form">
+              <div class="field">
+                <label for="f-nick">Nickname</label>
+                <input class="input" id="f-nick" type="text" placeholder="e.g. Battle.net, Steam, League of Legends">
+              </div>
+              <div class="field">
+                <label for="f-name">Name on card</label>
+                <input class="input" id="f-name" type="text" placeholder="MICHAEL TREMBLAY" autocomplete="off">
+              </div>
+              <div class="field">
+                <label for="f-num" style="display:flex;justify-content:space-between;align-items:center;">Card number <span class="brand-detect" id="brand-detect">No brand detected</span></label>
+                <input class="input" id="f-num" type="text" inputmode="numeric" placeholder="4242 4242 4242 4242" autocomplete="off">
+              </div>
+              <div class="grid2">
+                <div class="field">
+                  <label for="f-exp">Expiry</label>
+                  <input class="input" id="f-exp" type="text" inputmode="numeric" placeholder="MM/YY" autocomplete="off">
+                </div>
+                <div class="field">
+                  <label for="f-cvv">Security code (CVV)</label>
+                  <div class="input-wrap">
+                    <input class="input" id="f-cvv" type="password" inputmode="numeric" placeholder="•••" autocomplete="off">
+                    <button type="button" class="eye-btn" id="cvv-eye" aria-label="Show CVV"><svg class="ic"><use href="#i-eye"/></svg></button>
+                  </div>
+                </div>
+              </div>
+              <label class="check"><input type="checkbox" id="f-default"> Use this card by default for auto-fill</label>
+              <p class="secure-note"><svg class="ic"><use href="#i-shield"/></svg> Encrypted with AES-256-GCM · key derived from your master password · never leaves this PC</p>
+              <div class="foot">
+                <div class="btns">
+                  <button class="btn btn-primary" type="submit"><svg class="ic"><use href="#i-check"/></svg> Save card</button>
+                  <button class="btn btn-ghost" type="button" data-go="vault">Cancel</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </section>
+
+        <div class="toast" id="toast" role="status" aria-live="polite"><svg class="ic"><use href="#i-check"/></svg><span id="toast-msg">Done</span></div>
+      </div>
+    </div>
+
+    <p class="stage-note">
+      Three directions of the same <b>dark &amp; premium</b> idea — same layout, different atmosphere.<br>
+      This is a static mockup: nothing is saved, every button is simulated. Theme A follows the generated design system (gold trust + navy).
+    </p>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const $ = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+
+  /* ---------- theme ---------- */
+  const root = document.documentElement;
+  const saved = (()=>{ try{ return localStorage.getItem('wc-theme'); }catch(e){ return null; } })();
+  if(saved && ['a','b','c'].includes(saved)) root.dataset.theme = saved;
+  $$('[data-theme-pick]').forEach(btn=>{
+    btn.setAttribute('aria-pressed', btn.dataset.themePick === root.dataset.theme);
+    btn.addEventListener('click', ()=>{
+      root.dataset.theme = btn.dataset.themePick;
+      $$('[data-theme-pick]').forEach(b=>b.setAttribute('aria-pressed', b.dataset.themePick === btn.dataset.themePick));
+      try{ localStorage.setItem('wc-theme', btn.dataset.themePick); }catch(e){}
+    });
+  });
+
+  /* ---------- screen nav ---------- */
+  function go(id){
+    $$('.screen').forEach(s=>s.classList.toggle('active', s.dataset.screen === id));
+    $$('.demo-tab').forEach(t=>t.classList.toggle('active', t.dataset.go === id));
+  }
+  $$('.demo-tab').forEach(t=>t.addEventListener('click', ()=>go(t.dataset.go)));
+  $$('[data-go]').forEach(el=>el.addEventListener('click', ()=>go(el.dataset.go)));
+
+  /* ---------- toast ---------- */
+  let toastTimer = null;
+  function toast(msg){
+    $('#toast-msg').textContent = msg;
+    const t = $('#toast');
+    t.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>t.classList.remove('show'), 3200);
+  }
+
+  /* ---------- clipboard countdown ---------- */
+  let clipTimer = null, clipLeft = 0;
+  function fmt(s){ return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0'); }
+  function startClip(){
+    clipLeft = 45;
+    $('#clip-label').textContent = 'Clipboard has card data';
+    $('#clip-clear').hidden = false;
+    updateClip();
+    clearInterval(clipTimer);
+    clipTimer = setInterval(()=>{
+      clipLeft--;
+      if(clipLeft <= 0){ clearClip('Clipboard cleared automatically'); }
+      else updateClip();
+    }, 1000);
+  }
+  function updateClip(){
+    $('#clip-time').textContent = fmt(clipLeft);
+    $('#clip-bar').style.transform = 'scaleX(' + (clipLeft/45) + ')';
+  }
+  function clearClip(msg){
+    clearInterval(clipTimer);
+    $('#clip-label').textContent = 'Clipboard empty';
+    $('#clip-time').textContent = '0:00';
+    $('#clip-bar').style.transform = 'scaleX(0)';
+    $('#clip-clear').hidden = true;
+    if(msg) toast(msg);
+  }
+  $('#clip-clear').addEventListener('click', ()=>clearClip('Clipboard cleared'));
+
+  /* ---------- copy ---------- */
+  $$('.copy-act').forEach(btn=>btn.addEventListener('click', ()=>{
+    const label = btn.dataset.label || 'Value';
+    toast(label + ' copied — clipboard wipes itself in 45 s');
+    startClip();
+  }));
+
+  /* ---------- auto-fill simulation ---------- */
+  $('#autofill-btn').addEventListener('click', function(){
+    const btn = this;
+    btn.disabled = true;
+    toast('Switching back to Battle.net…');
+    setTimeout(()=>{
+      toast('Pasted into Battle.net ✓ — clipboard clears in 45 s');
+      startClip();
+      btn.disabled = false;
+    }, 1200);
+  });
+
+  /* ---------- password toggles ---------- */
+  function wireEye(btnId, inputId){
+    const btn = $(btnId), input = $(inputId);
+    btn.addEventListener('click', ()=>{
+      const show = input.type === 'password';
+      input.type = show ? 'text' : 'password';
+      btn.setAttribute('aria-label', show ? 'Hide' : 'Show');
+      btn.querySelector('use').setAttribute('href', show ? '#i-eye-off' : '#i-eye');
+    });
+  }
+  wireEye('#pwd-eye', '#pwd');
+  wireEye('#cvv-eye', '#f-cvv');
+
+  /* ---------- unlock ---------- */
+  $('#unlock-form').addEventListener('submit', e=>{
+    e.preventDefault();
+    go('vault');
+  });
+
+  /* ---------- search ---------- */
+  $('#search').addEventListener('input', e=>{
+    const q = e.target.value.trim().toLowerCase();
+    let visible = 0;
+    $$('#cards-grid .cardtile').forEach(t=>{
+      const hit = !q || (t.dataset.search||'').includes(q);
+      t.style.display = hit ? '' : 'none';
+      if(hit) visible++;
+    });
+    $('#empty-note').style.display = visible ? 'none' : 'block';
+    $('#empty-note span').textContent = q;
+  });
+
+  /* ---------- card tile → pay screen ---------- */
+  $$('#cards-grid .cardtile').forEach(t=>t.addEventListener('click', e=>{
+    if(e.target.closest('.tile-menu') || e.target.closest('.tile-actions')) return;
+    $('#pay-title').textContent = t.dataset.nick;
+    $('#pay-num').textContent = t.dataset.nick === 'Steam' ? '•••• •••••• •' + t.dataset.num4 : '•••• •••• •••• ' + t.dataset.num4;
+    $('#pay-holder').textContent = t.dataset.holder;
+    $('#pay-exp').textContent = t.dataset.exp;
+    const c = $('#pay-ccard');
+    c.className = 'ccard ' + t.dataset.brand;
+    $('#pay-brand').textContent = t.dataset.brand === 'mc' ? '' : t.dataset.brand.toUpperCase();
+    $('#pay-brand').style.display = t.dataset.brand === 'mc' ? 'none' : '';
+    $('#autofill-btn').innerHTML = '<svg class="ic"><use href="#i-zap"/></svg> Auto-paste into ' + t.dataset.nick;
+    go('pay');
+  }));
+
+  /* ---------- add card form ---------- */
+  const fNum = $('#f-num'), brandDetect = $('#brand-detect');
+  function detectBrand(digits){
+    if(/^4/.test(digits)) return 'visa';
+    if(/^(5[1-5]|2[2-7])/.test(digits)) return 'mc';
+    if(/^3[47]/.test(digits)) return 'amex';
+    return '';
+  }
+  function paintBrand(digits){
+    const b = detectBrand(digits);
+    brandDetect.className = 'brand-detect' + (b ? ' ' + b : '');
+    brandDetect.textContent = b === 'mc' ? 'MASTERCARD' : b === 'visa' ? 'VISA' : b === 'amex' ? 'AMEX' : 'No brand detected';
+  }
+  fNum.addEventListener('input', ()=>{
+    const digits = fNum.value.replace(/\D/g,'').slice(0,16);
+    fNum.value = digits.replace(/(.{4})/g,'$1 ').trim();
+    paintBrand(digits);
+  });
+  $('#f-exp').addEventListener('input', e=>{
+    let d = e.target.value.replace(/\D/g,'').slice(0,4);
+    if(d.length > 2) d = d.slice(0,2) + '/' + d.slice(2);
+    e.target.value = d;
+  });
+  $('#f-cvv').addEventListener('input', e=>{
+    e.target.value = e.target.value.replace(/\D/g,'').slice(0,4);
+  });
+  $('#add-form').addEventListener('submit', e=>{
+    e.preventDefault();
+    const nick = $('#f-nick').value.trim() || 'New card';
+    const digits = fNum.value.replace(/\D/g,'');
+    const b = detectBrand(digits);
+    const grid = $('#cards-grid');
+    const tile = document.createElement('div');
+    tile.className = 'cardtile';
+    tile.dataset.nick = nick;
+    tile.dataset.brand = b || 'visa';
+    tile.dataset.num4 = digits.slice(-4) || '0000';
+    tile.dataset.holder = ($('#f-name').value.trim() || 'CARDHOLDER').toUpperCase();
+    tile.dataset.exp = $('#f-exp').value.trim() || 'MM/YY';
+    tile.dataset.search = (nick + ' ' + (b||'') + ' ' + digits.slice(-4)).toLowerCase();
+    const brandTxt = b === 'mc' ? '<span class="mc-circles"><span></span><span></span></span>' : '<span class="brandtxt">' + (b || 'visa').toUpperCase() + '</span>';
+    tile.innerHTML =
+      '<div class="tile-name"><b></b><button class="tile-menu" aria-label="Card options"><svg class="ic"><use href="#i-dots"/></svg></button></div>' +
+      '<div class="ccard ' + (b || 'visa') + '"><div class="top"><span class="bank">WinCredit</span>' + brandTxt + '</div>' +
+      '<div class="num">•••• •••• •••• ' + (digits.slice(-4) || '0000') + '</div>' +
+      '<div class="foot"><div><div class="lab">Holder</div><b></b></div><div class="chip"></div><div><div class="lab">Expiry</div><b></b></div></div></div>' +
+      '<div class="tile-actions"><button class="btn btn-ghost btn-sm copy-act" data-label="Card number"><svg class="ic"><use href="#i-copy"/></svg> Copy</button>' +
+      '<button class="btn btn-ghost btn-sm fill-act"><svg class="ic"><use href="#i-zap"/></svg> Fill</button></div>';
+    tile.querySelector('.tile-name b').textContent = nick;
+    tile.querySelector('.foot b').textContent = tile.dataset.holder;
+    const footBs = tile.querySelectorAll('.foot b');
+    footBs[1].textContent = tile.dataset.exp;
+    grid.appendChild(tile);
+    tile.addEventListener('click', ev=>{
+      if(ev.target.closest('.tile-menu') || ev.target.closest('.tile-actions')) return;
+      $('#pay-title').textContent = tile.dataset.nick;
+      $('#pay-num').textContent = '•••• •••• •••• ' + tile.dataset.num4;
+      $('#pay-holder').textContent = tile.dataset.holder;
+      $('#pay-exp').textContent = tile.dataset.exp;
+      const c = $('#pay-ccard');
+      c.className = 'ccard ' + tile.dataset.brand;
+      $('#pay-brand').textContent = tile.dataset.brand.toUpperCase();
+      $('#pay-brand').style.display = tile.dataset.brand === 'mc' ? 'none' : '';
+      $('#autofill-btn').innerHTML = '<svg class="ic"><use href="#i-zap"/></svg> Auto-paste into ' + tile.dataset.nick;
+      go('pay');
+    });
+    tile.querySelector('.copy-act').addEventListener('click', ()=>{
+      toast('Card number copied — clipboard wipes itself in 45 s');
+      startClip();
+    });
+    toast('Card saved — encrypted with AES-256-GCM ✓');
+    e.target.reset();
+    paintBrand('');
+    go('vault');
+  });
+
+  /* ---------- "Fill" shortcut buttons on tiles ---------- */
+  $$('#cards-grid .fill-act').forEach(btn=>btn.addEventListener('click', ()=>{
+    toast('Auto-paste isn\'t wired in the mockup — open the card and try “Auto-paste into…”');
+  }));
+})();
+</script>
+</body>
+</html>
