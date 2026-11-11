@@ -37,3 +37,4 @@ np_root.exe
 zz1/
 scripts/dump_*.py
 scripts/smoke_asar.js
+.github-device.json
