@@ -34,6 +34,7 @@
   <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.7 1.7 0 0 0-1.87-.34 1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09a1.7 1.7 0 0 0-1.11-1.55 1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.7 1.7 0 0 0 .34-1.87 1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.64 8.9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.7 1.7 0 0 0 1.87.34h.09a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.55 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.7 1.7 0 0 0-.34 1.87v.09a1.7 1.7 0 0 0 1.55 1H21a2 2 0 1 1 0 4h-.09a1.7 1.7 0 0 0-1.51 1Z"/></symbol>
   <symbol id="i-power" viewBox="0 0 24 24"><path d="M12 3v8"/><path d="M6.3 6.5a8 8 0 1 0 11.4 0"/></symbol>
   <symbol id="i-warning" viewBox="0 0 24 24"><path d="M12 3.5 22 20H2L12 3.5Z"/><path d="M12 10v4"/><circle cx="12" cy="17" r=".4" fill="currentColor"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.7 3.8 9S14.5 18.4 12 21c-2.5-2.6-3.8-5.7-3.8-9S9.5 5.6 12 3Z"/></symbol>
 </svg>
 
 <!-- ============ TITLE BAR ============ -->
@@ -137,6 +138,7 @@
         <h2 id="pay-title">Card</h2>
         <p class="sub">Payment filling · choose how you want to fill</p>
       </div>
+      <button class="btn btn-ghost btn-sm pay-edit" id="btn-edit-pay"><svg class="ic"><use href="#i-pencil"/></svg> Edit</button>
     </div>
     <div class="pay-layout">
       <div class="pay-card">
@@ -164,6 +166,7 @@
         </div>
         <button class="btn btn-primary btn-block" id="btn-copy-number"><svg class="ic"><use href="#i-copy"/></svg> Copy card number</button>
         <button class="btn btn-ghost btn-block" id="btn-autofill"><svg class="ic"><use href="#i-zap"/></svg> Fill</button>
+        <button class="btn btn-ghost btn-block" id="btn-fillall"><svg class="ic"><use href="#i-globe"/></svg> Fill browser form (all fields)</button>
         <div class="clip-status" id="clip-status">
           <span class="dot"></span>
           <span id="clip-label">Clipboard empty</span>
@@ -171,7 +174,7 @@
           <span class="time" id="clip-time">0:00</span>
           <button class="clear" id="clip-clear" hidden>Clear now</button>
         </div>
-        <p class="note"><b>Fill</b> switches back to the app you were using and pastes the card number for you. In fullscreen games it can be blocked — then just use <b>Copy</b> and press <b>Ctrl+V</b>. The clipboard wipes itself automatically either way.</p>
+        <p class="note"><b>Fill</b> pastes the card number into the app you were using — ideal for games and Windows apps. <b>Fill browser form</b> is for Chrome / Firefox / Edge checkout pages: click inside the card-number field first, then it fills number, expiry, CVV and name in one go, like browser autofill. The clipboard is wiped afterwards either way.</p>
       </div>
     </div>
   </section>

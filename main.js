@@ -161,13 +161,48 @@ function autoFill(card) {
   if (win) win.hide();
   setTimeout(() => {
     pasteInto(hwnd);
-    try {
-      new Notification({
-        title: 'WinCredit',
-        body: 'Card number pasted into the app you were using.\nWinCredit stays in the tray — press Ctrl+Alt+C to reopen.',
-        icon: APP_ICON,
-      }).show();
-    } catch (e) { /* notifications are best-effort */ }
+    notifyPasted();
+  }, 300);
+  return true;
+}
+
+function notifyPasted() {
+  try {
+    new Notification({
+      title: 'WinCredit',
+      body: 'Fields pasted into the app you were using.\nWinCredit stays in the tray — press Ctrl+Alt+C to reopen.',
+      icon: APP_ICON,
+    }).show();
+  } catch (e) { /* notifications are best-effort */ }
+}
+
+/**
+ * Browser-checkout fill: paste number, Tab, expiry, Tab, CVV, Tab, name —
+ * the same field-by-field mechanism browser autofill uses, driven from outside.
+ * The clipboard is cleared at the end.
+ */
+function fillAllFields(card) {
+  const hwnd = lastFgHwnd || 0;
+  const win = BrowserWindow.getAllWindows()[0];
+  if (!hwnd) return false;
+  const esc = s => String(s).replace(/'/g, "''");
+  const vals = [card.number, card.expiry, card.cvv, card.holder].map(esc);
+  const step = (v, sleepAfter) =>
+    `Set-Clipboard -Value '${v}'; [System.Windows.Forms.SendKeys]::SendWait('^v'); Start-Sleep -Milliseconds ${sleepAfter};`;
+  const script =
+    "Add-Type -AssemblyName System.Windows.Forms;" +
+    "Add-Type -Namespace W -Name U -MemberDefinition '[DllImport(\"user32.dll\")] public static extern bool SetForegroundWindow(System.IntPtr h);';" +
+    'if ($args[0] -ne 0) { [void][W.U]::SetForegroundWindow([System.IntPtr][int64]$args[0]) }' +
+    'Start-Sleep -Milliseconds 250;' +
+    step(vals[0], 120) + "[System.Windows.Forms.SendKeys]::SendWait('{TAB}');" +
+    step(vals[1], 120) + "[System.Windows.Forms.SendKeys]::SendWait('{TAB}');" +
+    step(vals[2], 120) + "[System.Windows.Forms.SendKeys]::SendWait('{TAB}');" +
+    step(vals[3], 400) +
+    "Set-Clipboard -Value ''";
+  if (win) win.hide();
+  setTimeout(() => {
+    psRun(script, [hwnd]);
+    notifyPasted();
   }, 300);
   return true;
 }
@@ -372,6 +407,14 @@ function registerIpc() {
     const card = findCard(id);
     if (!card) return { ok: false, error: 'Card not found.' };
     const willPaste = autoFill(card);
+    return { ok: true, willPaste };
+  });
+
+  ipcMain.handle('fillall', (_e, id) => {
+    touch();
+    const card = findCard(id);
+    if (!card) return { ok: false, error: 'Card not found.' };
+    const willPaste = fillAllFields(card);
     return { ok: true, willPaste };
   });
 

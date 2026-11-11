@@ -240,6 +240,7 @@ a{color:var(--info);}
 
 /* ---------- pay ---------- */
 .pay-top{display:flex;align-items:center;gap:12px;margin-bottom:22px;}
+.pay-top .pay-edit{margin-left:auto;}
 .back-btn{width:34px;height:34px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--border);background:var(--surface2);color:var(--dim);cursor:pointer;transition:all .18s;flex:none;}
 .back-btn:hover{color:var(--text);border-color:rgba(235,166,74,.45);}
 .back-btn .ic{width:16px;height:16px;}

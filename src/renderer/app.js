@@ -208,12 +208,10 @@ function openTileMenu(anchor, card) {
       toast('Card deleted');
     }
   }, true));
-  const rect = anchor.getBoundingClientRect();
   const tile = anchor.closest('.cardtile');
   popoverEl.style.position = 'absolute';
-  popoverEl.style.right = (tile.offsetWidth - rect.right) + 'px';
-  popoverEl.style.top = (rect.bottom - tile.getBoundingClientRect().top) + 4 + 'px';
-  tile.style.overflow = 'visible';
+  popoverEl.style.right = '8px';
+  popoverEl.style.top = '40px';
   tile.appendChild(popoverEl);
   document.addEventListener('click', closePopover, { once: true, capture: true });
 }
@@ -303,6 +301,16 @@ async function doAutofill(card) {
     return;
   }
   // willPaste: the window hides now, the main process pastes and notifies.
+}
+async function doFillAll(card) {
+  toast('Filling the browser form…', 'warn');
+  const r = await api.fillAll(card.id);
+  if (!r.ok) { toast(r.error || 'Fill failed — use Copy instead.', 'err'); return; }
+  if (!r.willPaste) {
+    toast('No target app detected — click inside the card-number field and try again');
+    return;
+  }
+  // willPaste: the window hides now, the main process fills and notifies.
 }
 
 /* ------------------------------------------------------------ */
@@ -537,10 +545,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   /* pay */
   $('#btn-back-vault').addEventListener('click', () => showScreen('vault'));
+  $('#btn-edit-pay').addEventListener('click', () => {
+    const card = state.cards.find(c => c.id === state.currentId);
+    if (card) openEdit(card);
+  });
   $('#btn-copy-number').addEventListener('click', () => { if (state.currentId) copyField(state.currentId, 'number', 'Card number'); });
   $('#btn-autofill').addEventListener('click', () => {
     const card = state.cards.find(c => c.id === state.currentId);
     if (card) doAutofill(card);
+  });
+  $('#btn-fillall').addEventListener('click', () => {
+    const card = state.cards.find(c => c.id === state.currentId);
+    if (card) doFillAll(card);
   });
   $$('.copy-chip').forEach(chip => chip.addEventListener('click', () => {
     if (state.currentId) copyField(state.currentId, chip.dataset.copyField, chip.closest('.fieldrow').querySelector('.lab').textContent);

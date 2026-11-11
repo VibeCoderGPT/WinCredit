@@ -28,8 +28,12 @@ hl = Image.new('L', (S, S), 0)
 ImageDraw.Draw(hl).rounded_rectangle([8, 8, S - 9, int(S * 0.55)], radius=50, fill=46)
 icon.paste((255, 255, 255, 255), (0, 0), Image.composite(hl, Image.new('L', (S, S), 0), mask))
 
-font_path = r'C:\Windows\Fonts\georgiaz.ttf'
-font = ImageFont.truetype(font_path, 158)
+font_path = r'C:\Windows\Fonts\bahnschrift.ttf'
+font = ImageFont.truetype(font_path, 150)
+try:
+    font.set_variation_by_axes([700])   # Bahnschrift Bold (geometric sans, like Space Grotesk)
+except Exception:
+    pass
 bbox = draw.textbbox((0, 0), 'W', font=font)
 w, h = bbox[2] - bbox[0], bbox[3] - bbox[1]
 x = (S - w) / 2 - bbox[0]
