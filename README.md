@@ -47,11 +47,13 @@ mockups/             The interactive mockup used to pick the visual direction
 
 ## Development
 
+The PC keeps only the source code; everything is versioned on GitHub.
+
 ```powershell
-npm install                    # uses .npmrc cache inside the project
-$env:ELECTRON_CACHE='D:\WinCredit\.electron-cache'
-npm start                      # run the app
-npm test                       # crypto tests (no Electron needed)
+Dev-Setup.bat        # one click: rebuilds the dev engine (npm install)
+Run-WinCredit-dev.bat# launch the app in dev mode
+npm test             # crypto + card + UI tests (43)
+Push.bat             # send changes to GitHub (browser login once, then automatic)
 ```
 
 Dev convenience: `WINCREDIT_HOME=<dir>` redirects the user-data folder
