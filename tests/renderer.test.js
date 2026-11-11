@@ -92,8 +92,7 @@ function makeApi() {
           : field === 'expiry' ? card.expiry
             : field === 'cvv' ? card.cvv
               : field === 'holder' ? card.holder
-                : field === 'address' ? [card.street, [card.city, card.region].filter(Boolean).join(', ') + (card.zip ? ' ' + card.zip : ''), card.country].filter(Boolean).join('\n')
-                  : '';
+                : (card[field] !== undefined ? card[field] : '');
         state.clipValue = val;
         return { ok: true, secs: 45, field };
       },
@@ -206,11 +205,18 @@ const tick = (ms = 25) => new Promise(r => setTimeout(r, ms));
     assert.strictEqual($('#p-holder').textContent, 'MIKE');
   });
 
-  t('pay screen shows address and copies it', async () => {
-    assert.strictEqual($('#p-addr').textContent, '1234 Main Street, Apt 5\nMontréal, QC H1A 0A1\nCanada');
-    $('.copy-chip[data-copy-field="address"]').click();
+  t('pay screen shows the 5 address fields separately and copies each', async () => {
+    assert.strictEqual($('#p-street').textContent, '1234 Main Street, Apt 5');
+    assert.strictEqual($('#p-city').textContent, 'Montréal');
+    assert.strictEqual($('#p-region').textContent, 'QC');
+    assert.strictEqual($('#p-zip').textContent, 'H1A 0A1');
+    assert.strictEqual($('#p-country').textContent, 'Canada');
+    $('.copy-chip[data-copy-field="city"]').click();
     await tick(20);
-    assert.strictEqual(api._clipValue(), '1234 Main Street, Apt 5\nMontréal, QC H1A 0A1\nCanada');
+    assert.strictEqual(api._clipValue(), 'Montréal');
+    $('.copy-chip[data-copy-field="zip"]').click();
+    await tick(20);
+    assert.strictEqual(api._clipValue(), 'H1A 0A1');
   });
 
   t('copy chip sends (id, field) to main and starts countdown', async () => {

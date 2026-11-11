@@ -272,10 +272,15 @@ function openPay(card) {
   $('#p-num').textContent = (card.brand === 'amex' ? '•••• •' : '•••• ') + card.last4;
   $('#p-exp').textContent = card.expiry;
   $('#p-holder').textContent = card.holder;
-  const addr = [card.street, [card.city, card.region].filter(Boolean).join(', ') + (card.zip ? ' ' + card.zip : ''), card.country]
-    .filter(Boolean).join('\n');
-  $('#p-addr').textContent = addr || 'No address saved';
-  $('#p-addr').classList.toggle('empty', !addr);
+  const addr = {
+    street: card.street, city: card.city, region: card.region, zip: card.zip, country: card.country,
+  };
+  for (const [k, elId] of Object.entries({ street: '#p-street', city: '#p-city', region: '#p-region', zip: '#p-zip', country: '#p-country' })) {
+    const el = $(elId);
+    const v = addr[k] || '';
+    el.textContent = v || 'No ' + { street: 'street', city: 'city', region: 'province', zip: 'postal code', country: 'country' }[k] + ' saved';
+    el.classList.toggle('empty', !v);
+  }
   const c = $('#pay-ccard');
   c.className = 'ccard ' + card.brand;
   const isMc = card.brand === 'mc';

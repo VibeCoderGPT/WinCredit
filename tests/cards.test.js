@@ -73,11 +73,15 @@ t('masked view strips number and cvv but keeps address', () => {
   assert.strictEqual(view.street, '1 Rue Test');
   assert.strictEqual(view.city, 'MTL');
 });
-t('fieldValue serves all fields including formatted address', () => {
-  const c = { number: '5555555555554444', expiry: '11/27', cvv: '999', holder: 'A B', street: '1 Rue Test', city: 'MTL', region: 'QC', zip: 'H0H', country: 'Canada' };
+t('fieldValue serves every field individually', () => {
+  const c = { number: '5555555555554444', expiry: '11/27', cvv: '999', holder: 'A B', street: '1 Rue Test, Apt 2', city: 'MTL', region: 'QC', zip: 'H0H', country: 'Canada' };
   assert.strictEqual(fieldValue(c, 'number'), '5555555555554444');
   assert.strictEqual(fieldValue(c, 'cvv'), '999');
-  assert.strictEqual(fieldValue(c, 'address'), '1 Rue Test\nMTL, QC H0H\nCanada');
+  assert.strictEqual(fieldValue(c, 'street'), '1 Rue Test, Apt 2');
+  assert.strictEqual(fieldValue(c, 'city'), 'MTL');
+  assert.strictEqual(fieldValue(c, 'region'), 'QC');
+  assert.strictEqual(fieldValue(c, 'zip'), 'H0H');
+  assert.strictEqual(fieldValue(c, 'country'), 'Canada');
   assert.throws(() => fieldValue(c, 'password'));
 });
 
