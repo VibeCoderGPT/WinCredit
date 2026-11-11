@@ -165,11 +165,7 @@ function renderVault(filter = '') {
     copyBtn.className = 'btn btn-ghost btn-sm';
     copyBtn.innerHTML = '<svg class="ic"><use href="#i-copy"/></svg> Copy';
     copyBtn.addEventListener('click', e => { e.stopPropagation(); copyField(card.id, 'number', 'Card number'); });
-    const fillBtn = document.createElement('button');
-    fillBtn.className = 'btn btn-ghost btn-sm';
-    fillBtn.innerHTML = '<svg class="ic"><use href="#i-zap"/></svg> Fill';
-    fillBtn.addEventListener('click', e => { e.stopPropagation(); doAutofill(card); });
-    actions.append(copyBtn, fillBtn);
+    actions.appendChild(copyBtn);
     tile.appendChild(actions);
 
     tile.addEventListener('click', () => openPay(card));
@@ -286,31 +282,8 @@ function openPay(card) {
   $('#pay-brand').hidden = isMc;
   $('#pay-mc').hidden = !isMc;
   if (!isMc) $('#pay-brand').textContent = card.brand.toUpperCase();
-  const afBtn = $('#btn-autofill');
-  afBtn.innerHTML = '<svg class="ic"><use href="#i-zap"/></svg>';
-  afBtn.appendChild(document.createTextNode('Fill'));
   showScreen('pay');
   api.clip.status().then(r => { if (r && r.remaining > 0) startClip(r.remaining, state.settings.clipClearSecs); });
-}
-async function doAutofill(card) {
-  toast('Switching to your app…', 'warn');
-  const r = await api.autofill(card.id);
-  if (!r.ok) { toast(r.error || 'Fill failed — use Copy instead.', 'err'); return; }
-  if (!r.willPaste) {
-    toast('No target app detected — number copied, press Ctrl+V in your app');
-    return;
-  }
-  // willPaste: the window hides now, the main process pastes and notifies.
-}
-async function doFillAll(card) {
-  toast('Filling the browser form…', 'warn');
-  const r = await api.fillAll(card.id);
-  if (!r.ok) { toast(r.error || 'Fill failed — use Copy instead.', 'err'); return; }
-  if (!r.willPaste) {
-    toast('No target app detected — click inside the card-number field and try again');
-    return;
-  }
-  // willPaste: the window hides now, the main process fills and notifies.
 }
 
 /* ------------------------------------------------------------ */
@@ -550,14 +523,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (card) openEdit(card);
   });
   $('#btn-copy-number').addEventListener('click', () => { if (state.currentId) copyField(state.currentId, 'number', 'Card number'); });
-  $('#btn-autofill').addEventListener('click', () => {
-    const card = state.cards.find(c => c.id === state.currentId);
-    if (card) doAutofill(card);
-  });
-  $('#btn-fillall').addEventListener('click', () => {
-    const card = state.cards.find(c => c.id === state.currentId);
-    if (card) doFillAll(card);
-  });
   $$('.copy-chip').forEach(chip => chip.addEventListener('click', () => {
     if (state.currentId) copyField(state.currentId, chip.dataset.copyField, chip.closest('.fieldrow').querySelector('.lab').textContent);
   }));

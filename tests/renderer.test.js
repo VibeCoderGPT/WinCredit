@@ -204,7 +204,6 @@ const tick = (ms = 25) => new Promise(r => setTimeout(r, ms));
     assert.strictEqual($('#pay-title').textContent, 'Battle.net');
     assert.strictEqual($('#p-num').textContent, '•••• 4242');
     assert.strictEqual($('#p-holder').textContent, 'MIKE');
-    assert.strictEqual($('#btn-autofill').textContent.trim(), 'Fill');
   });
 
   t('pay screen shows address and copies it', async () => {
@@ -222,19 +221,11 @@ const tick = (ms = 25) => new Promise(r => setTimeout(r, ms));
     assert.strictEqual($('#clip-label').textContent, 'Clipboard has card data');
   });
 
-  t('fill without a target keeps the window open and guides the user', async () => {
-    $('#btn-autofill').click();
-    await tick(30);
-    assert.ok($('.screen[data-screen="pay"]').classList.contains('active'));
-    assert.ok($('#toast').classList.contains('show'));
-    assert.ok($('#toast-msg').textContent.includes('Ctrl+V'));
-  });
-
-  t('fill browser form button wired to fillAll', async () => {
-    $('#btn-fillall').click();
-    await tick(30);
-    assert.ok($('.screen[data-screen="pay"]').classList.contains('active'));
-    assert.ok($('#toast-msg').textContent.includes('card-number field'));
+  t('no Fill buttons remain (simple copy-only app)', () => {
+    assert.strictEqual(document.querySelector('#btn-autofill'), null);
+    assert.strictEqual(document.querySelector('#btn-fillall'), null);
+    const tileFill = document.querySelector('#cards-grid .tile-actions .btn svg use[href="#i-zap"]');
+    assert.strictEqual(tileFill, null);
   });
 
   t('pay screen Edit button opens the edit form', async () => {
