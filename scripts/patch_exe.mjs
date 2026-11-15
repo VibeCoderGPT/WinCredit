@@ -12,6 +12,10 @@ const root = path.resolve(import.meta.dirname, '..');
 const exePath = path.join(root, 'dist', 'WinCredit', 'WinCredit.exe');
 const icoPath = path.join(root, 'assets', 'icon.ico');
 
+// The product version always follows package.json — never a stale literal.
+const pkg = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+const [maj = 0, min = 0, patch = 0] = String(pkg.version).split('.').map(n => parseInt(n, 10) || 0);
+
 const data = fs.readFileSync(exePath);
 const exe = PELibrary.NtExecutable.from(data, { ignoreCert: true });
 const res = PELibrary.NtExecutableResource.from(exe);
@@ -30,8 +34,8 @@ console.log('replaced', groups.length, 'icon group(s)');
 const viList = ResEdit.Resource.VersionInfo.fromEntries(res.entries);
 if (viList.length > 0) {
   const vi = viList[0];
-  vi.setFileVersion(0, 1, 0, 0, 1033);
-  vi.setProductVersion(0, 1, 0, 0, 1033);
+  vi.setFileVersion(maj, min, patch, 0, 1033);
+  vi.setProductVersion(maj, min, patch, 0, 1033);
   vi.setStringValues({ lang: 1033, codepage: 1200 }, {
     FileDescription: 'WinCredit - encrypted card vault',
     ProductName: 'WinCredit',
@@ -40,7 +44,7 @@ if (viList.length > 0) {
     OriginalFilename: 'WinCredit.exe',
   });
   vi.outputToResourceEntries(res.entries);
-  console.log('version info updated');
+  console.log('version info updated ->', pkg.version);
 } else {
   console.log('no version info resource (skipped)');
 }

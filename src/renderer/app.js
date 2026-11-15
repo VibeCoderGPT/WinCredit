@@ -1,7 +1,7 @@
 /**
  * WinCredit renderer — Midnight Gold.
  * All card data here is MASKED. Full numbers/CVVs never reach this context:
- * copy and auto-fill are done by the main process via window.wincredit.
+ * copy operations are performed by the main process via window.wincredit.
  */
 'use strict';
 
@@ -185,7 +185,7 @@ function openTileMenu(anchor, card) {
     const span = document.createElement('span');
     span.textContent = label;
     btn.appendChild(span);
-    btn.addEventListener('click', () => { closePopover(); onClick(); });
+    btn.addEventListener('click', e => { e.stopPropagation(); closePopover(); onClick(); });
     return btn;
   };
   popoverEl.appendChild(mk('Edit', 'pencil', () => openEdit(card)));
@@ -424,6 +424,9 @@ function handleLock(reason) {
   state.cards = [];
   state.currentId = null;
   state.editId = null;
+  closePopover();
+  renderVault();
+  $('#card-form').reset();
   resetClip();
   setUnlockMode(state.hasVault ? 'unlock' : 'create');
   showScreen('unlock');

@@ -1,7 +1,7 @@
 {
   "name": "wincredit",
   "productName": "WinCredit",
-  "version": "0.1.0",
+  "version": "0.3.3",
   "description": "Encrypted credit-card vault with one-click payment filling for Windows. Your cards stay yours.",
   "main": "main.js",
   "private": true,

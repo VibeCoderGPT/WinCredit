@@ -2,7 +2,7 @@
  * WinCredit main process.
  *
  * Design rules:
- *  - The renderer NEVER sees full card numbers or CVVs. Copy/auto-fill
+ *  - The renderer NEVER sees full card numbers or CVVs. Copy operations
  *    happen entirely in the main process; the renderer only gets masked views.
  *  - The decrypted vault exists only in main-process memory while unlocked,
  *    and the key buffer is zeroed on lock.
@@ -11,12 +11,10 @@
  */
 'use strict';
 
-const { app, BrowserWindow, ipcMain, clipboard, globalShortcut, Tray, Menu, nativeImage, powerMonitor, shell, Notification } = require('electron');
+const { app, BrowserWindow, ipcMain, clipboard, globalShortcut, Tray, Menu, nativeImage, powerMonitor, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
-const os = require('os');
 const crypto = require('crypto');
-const { spawn } = require('child_process');
 const vault = require('./vault');
 const { FIELDS, validateCardInput, masked, fieldValue } = require('./lib/cards');
 
@@ -115,99 +113,6 @@ function clipRemaining() {
 }
 
 /* ------------------------------------------------------------------ */
-/* Foreground-window capture + auto-paste (PowerShell bridge)          */
-/* ------------------------------------------------------------------ */
-let lastFgHwnd = 0;
-function psRun(script, args = []) {
-  try {
-    spawn('powershell.exe',
-      ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-Command', script, ...args.map(String)],
-      { windowsHide: true, stdio: 'ignore' });
-  } catch (e) { console.error('[ps] spawn failed:', e.message); }
-}
-function captureForeground() {
-  const out = path.join(userData(), 'fg.tmp');
-  const script =
-    "Add-Type -Namespace W -Name U -MemberDefinition '[DllImport(\"user32.dll\")] public static extern System.IntPtr GetForegroundWindow();';" +
-    `$h = [W.U]::GetForegroundWindow().ToInt64(); Set-Content -Path '${out.replace(/'/g, "''")}' -Value $h`;
-  const p = spawn('powershell.exe',
-    ['-NoProfile', '-NonInteractive', '-ExecutionPolicy', 'Bypass', '-Command', script],
-    { windowsHide: true, stdio: 'ignore' });
-  p.on('close', () => {
-    fs.readFile(out, 'utf8', (err, txt) => {
-      fs.unlink(out, () => {});
-      if (!err) {
-        const h = parseInt(txt, 10);
-        if (Number.isFinite(h) && h > 0) lastFgHwnd = h;
-      }
-    });
-  });
-  p.on('error', () => {});
-}
-function pasteInto(hwnd) {
-  const script =
-    "Add-Type -AssemblyName System.Windows.Forms;" +
-    "Add-Type -Namespace W -Name U -MemberDefinition '[DllImport(\"user32.dll\")] public static extern bool SetForegroundWindow(System.IntPtr h);';" +
-    'if ($args[0] -ne 0) { [void][W.U]::SetForegroundWindow([System.IntPtr][int64]$args[0]) }' +
-    'Start-Sleep -Milliseconds 180;' +
-    '[System.Windows.Forms.SendKeys]::SendWait("^v")';
-  psRun(script, [hwnd]);
-}
-function autoFill(card) {
-  copyToClipboard(card.number, settings.clipClearSecs);
-  const hwnd = lastFgHwnd || 0;
-  const win = BrowserWindow.getAllWindows()[0];
-  if (!hwnd) return false; // no known target: keep the window open, let the user paste manually
-  if (win) win.hide();
-  setTimeout(() => {
-    pasteInto(hwnd);
-    notifyPasted();
-  }, 300);
-  return true;
-}
-
-function notifyPasted() {
-  try {
-    new Notification({
-      title: 'WinCredit',
-      body: 'Fields pasted into the app you were using.\nWinCredit stays in the tray — press Ctrl+Alt+C to reopen.',
-      icon: APP_ICON,
-    }).show();
-  } catch (e) { /* notifications are best-effort */ }
-}
-
-/**
- * Browser-checkout fill: paste number, Tab, expiry, Tab, CVV, Tab, name —
- * the same field-by-field mechanism browser autofill uses, driven from outside.
- * The clipboard is cleared at the end.
- */
-function fillAllFields(card) {
-  const hwnd = lastFgHwnd || 0;
-  const win = BrowserWindow.getAllWindows()[0];
-  if (!hwnd) return false;
-  const esc = s => String(s).replace(/'/g, "''");
-  const vals = [card.number, card.expiry, card.cvv, card.holder].map(esc);
-  const step = (v, sleepAfter) =>
-    `Set-Clipboard -Value '${v}'; [System.Windows.Forms.SendKeys]::SendWait('^v'); Start-Sleep -Milliseconds ${sleepAfter};`;
-  const script =
-    "Add-Type -AssemblyName System.Windows.Forms;" +
-    "Add-Type -Namespace W -Name U -MemberDefinition '[DllImport(\"user32.dll\")] public static extern bool SetForegroundWindow(System.IntPtr h);';" +
-    'if ($args[0] -ne 0) { [void][W.U]::SetForegroundWindow([System.IntPtr][int64]$args[0]) }' +
-    'Start-Sleep -Milliseconds 250;' +
-    step(vals[0], 120) + "[System.Windows.Forms.SendKeys]::SendWait('{TAB}');" +
-    step(vals[1], 120) + "[System.Windows.Forms.SendKeys]::SendWait('{TAB}');" +
-    step(vals[2], 120) + "[System.Windows.Forms.SendKeys]::SendWait('{TAB}');" +
-    step(vals[3], 400) +
-    "Set-Clipboard -Value ''";
-  if (win) win.hide();
-  setTimeout(() => {
-    psRun(script, [hwnd]);
-    notifyPasted();
-  }, 300);
-  return true;
-}
-
-/* ------------------------------------------------------------------ */
 /* Window / tray / shortcut                                            */
 /* ------------------------------------------------------------------ */
 let win = null;
@@ -237,7 +142,6 @@ function createWindow() {
     if (!autoStart) { win.show(); win.focus(); }
   });
   win.on('focus', touch);
-  win.on('blur', () => captureForeground());
   win.on('maximize', () => win.webContents.send('win:maximized', true));
   win.on('unmaximize', () => win.webContents.send('win:maximized', false));
   win.on('close', (e) => {
@@ -261,13 +165,13 @@ function createWindow() {
 function createTray() {
   tray = new Tray(TRAY_ICON);
   tray.setToolTip('WinCredit');
-  tray.on('click', () => { captureForeground(); if (win) { win.show(); win.focus(); } });
+  tray.on('click', () => { if (win) { win.show(); win.focus(); } });
   rebuildTrayMenu();
 }
 function rebuildTrayMenu() {
   if (!tray) return;
   tray.setContextMenu(Menu.buildFromTemplate([
-    { label: 'Open WinCredit', click: () => { captureForeground(); win && win.show(), win && win.focus(); } },
+    { label: 'Open WinCredit', click: () => { win && win.show(), win && win.focus(); } },
     state ? { label: 'Lock vault', click: () => lockVault('Locked from tray') } : { label: 'Vault locked', enabled: false },
     { type: 'separator' },
     { label: 'Quit WinCredit', click: () => { quitting = true; app.quit(); } },
@@ -277,7 +181,7 @@ function rebuildTrayMenu() {
 function toggleFromHotkey() {
   if (!win) return;
   if (win.isVisible()) { win.hide(); }
-  else { captureForeground(); win.show(); win.focus(); }
+  else { win.show(); win.focus(); }
 }
 function registerHotkey() {
   const ok = globalShortcut.register('Control+Alt+C', toggleFromHotkey);
@@ -401,22 +305,6 @@ function registerIpc() {
 
   ipcMain.handle('clip:clear', () => { clearOwnClipboard(false); return { ok: true }; });
   ipcMain.handle('clip:status', () => ({ remaining: clipRemaining() }));
-
-  ipcMain.handle('autofill', (_e, id) => {
-    touch();
-    const card = findCard(id);
-    if (!card) return { ok: false, error: 'Card not found.' };
-    const willPaste = autoFill(card);
-    return { ok: true, willPaste };
-  });
-
-  ipcMain.handle('fillall', (_e, id) => {
-    touch();
-    const card = findCard(id);
-    if (!card) return { ok: false, error: 'Card not found.' };
-    const willPaste = fillAllFields(card);
-    return { ok: true, willPaste };
-  });
 
   ipcMain.handle('settings:get', () => ({ ...settings }));
   ipcMain.handle('settings:set', (_e, patch) => {

@@ -26,8 +26,6 @@ const api = {
     clear: () => ipcRenderer.invoke('clip:clear'),
     status: () => ipcRenderer.invoke('clip:status'),
   },
-  autofill: id => ipcRenderer.invoke('autofill', id),
-  fillAll: id => ipcRenderer.invoke('fillall', id),
   settings: {
     get: () => ipcRenderer.invoke('settings:get'),
     set: patch => ipcRenderer.invoke('settings:set', patch),

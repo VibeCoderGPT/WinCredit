@@ -19,6 +19,7 @@ settings.json
 *.log
 crash-log.txt
 conv-*.jsonl
+ancienne conversation.txt
 user-screenshot.png
 shot-*.png
 .ps-bridge-report.txt
