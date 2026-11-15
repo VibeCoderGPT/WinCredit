@@ -94,8 +94,10 @@ The uninstaller removes the app but deliberately keeps the encrypted vault
   (`nativeImage.createFromBuffer`) — `createFromPath` cannot open asar paths.
 
 Rebuild + reinstall after code changes. PowerShell 7 is installed on this
-machine (`pwsh`); on a machine without it, the Windows PowerShell 5.1
-equivalent `powershell -NoProfile -ExecutionPolicy Bypass -File …` works too.
+machine as a portable copy in `D:\Onedrive\Workspace\DEV\Outil\PowerShell-7.7.0-win-x64`
+(on the user `PATH`, so `pwsh` works from a fresh terminal); on a machine
+without it, the Windows PowerShell 5.1 equivalent
+`powershell -NoProfile -ExecutionPolicy Bypass -File …` works too.
 
 ```powershell
 pwsh -File scripts\build-package.ps1        # builds dist\WinCredit + app.asar
