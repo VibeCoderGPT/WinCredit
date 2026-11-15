@@ -93,11 +93,13 @@ The uninstaller removes the app but deliberately keeps the encrypted vault
 - The tray icon is read from the asar through Electron's patched fs
   (`nativeImage.createFromBuffer`) — `createFromPath` cannot open asar paths.
 
-Rebuild + reinstall after code changes:
+Rebuild + reinstall after code changes. PowerShell 7 is installed on this
+machine (`pwsh`); on a machine without it, the Windows PowerShell 5.1
+equivalent `powershell -NoProfile -ExecutionPolicy Bypass -File …` works too.
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts\build-package.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File scripts\install-wincredit.ps1
+pwsh -File scripts\build-package.ps1        # builds dist\WinCredit + app.asar
+pwsh -File scripts\install-wincredit.ps1    # copies dist\ to %LOCALAPPDATA%
 ```
 
 `build-package.ps1` recreates `dist\WinCredit` from the local Electron engine
