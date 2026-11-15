@@ -39,3 +39,6 @@ zz1/
 scripts/dump_*.py
 scripts/smoke_asar.js
 .github-device.json
+
+# Captures d'ecran de travail
+.shots/
